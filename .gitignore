@@ -1,8 +1,7 @@
 venv/
-   env/
-   __pycache__/
-   *.pyc
-   .env
-   *.db
-   .vscode/
+env/
+__pycache__/
+*.pyc
 .env
+*.db
+.vscode/
