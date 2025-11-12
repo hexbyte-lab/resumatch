@@ -9,6 +9,14 @@ A resume-to-job-description matching tool that helps job seekers improve their r
 - **Clean Web Interface**: Simple, user-friendly interface for easy analysis
 - **REST API**: Backend API for programmatic access
 
+## Screenshots
+
+### Main Interface
+![ResuMatch Interface](images/interface.png)
+
+### Analysis Results
+![Analysis Results](images/results.png)
+
 ## Tech Stack
 
 - **Backend**: Python, Flask
