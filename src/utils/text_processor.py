@@ -1,7 +1,7 @@
 import re
-import nltk
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
+import nltk  # type: ignore
+from nltk.corpus import stopwords # type: ignore
+from nltk.tokenize import word_tokenize # type: ignore
 
 
 try:

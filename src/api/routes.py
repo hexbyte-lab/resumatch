@@ -1,5 +1,9 @@
 from flask import Blueprint, request, jsonify
 from src.services.matcher import ResumeMatcher
+from src.utils.logger import setup_logger
+
+# Set up logger
+logger = setup_logger("api")
 
 # Create blueprint
 api = Blueprint("api", __name__)
@@ -50,6 +54,7 @@ def analyze_resume():
         return jsonify({"success": True, "data": result}), 200
 
     except Exception as e:
+        logger.error(f"Error in analyze: {str(e)}")
         return jsonify(
             {"error": "An error occurred during analysis", "details": str(e)}
         ), 500
