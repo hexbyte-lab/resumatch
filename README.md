@@ -6,7 +6,9 @@ A resume-to-job-description matching tool that helps job seekers improve their r
 
 - **Match Score Calculation**: Get a percentage score showing how well your resume matches a job description
 - **Missing Keywords Detection**: Identify important keywords from the job posting that are missing in your resume
-- **Clean Web Interface**: Simple, user-friendly interface for easy analysis
+- **File Upload Support**: Upload resumes in PDF, DOCX, or TXT format
+- **Flexible Input**: Choose between file upload or direct text paste
+- **Clean Web Interface**: Simple, user-friendly interface with smart form handling
 - **REST API**: Backend API for programmatic access
 
 ## Screenshots
@@ -21,28 +23,36 @@ A resume-to-job-description matching tool that helps job seekers improve their r
 
 - **Backend**: Python, Flask
 - **NLP**: NLTK, scikit-learn (TF-IDF vectorization)
-- **Frontend**: HTML, CSS, JavaScript
+- **File Processing**: PyPDF2, python-docx
+- **Frontend**: HTML, CSS, JavaScript (separated for maintainability)
 - **Algorithm**: Cosine similarity for text matching
 
 ## Project Structure
 ```
 resumatch/
-├── app.py                  # Flask application entry point
+├── app.py                      # Flask application entry point
 ├── src/
 │   ├── api/
-│   │   └── routes.py       # API endpoints
+│   │   └── routes.py           # API endpoints
 │   ├── services/
-│   │   └── matcher.py      # Core matching algorithm
+│   │   └── matcher.py          # Core matching algorithm
 │   ├── utils/
-│   │   └── text_processor.py  # Text cleaning and keyword extraction
-│   └── config.py           # Configuration settings
+│   │   ├── text_processor.py   # Text cleaning and keyword extraction
+│   │   ├── file_processor.py   # PDF/DOCX file handling
+│   │   └── logger.py           # Application logging
+│   └── config.py               # Configuration settings
 ├── static/
-│   └── index.html          # Frontend interface
-├── tests/                  # Unit tests (TODO)
+│   ├── index.html              # Frontend HTML
+│   ├── css/
+│   │   └── styles.css          # Styling
+│   └── js/
+│       └── app.js              # Frontend logic
+├── tests/                      # Unit tests (TODO)
 ├── docs/
-│   └── requirements.md     # Project requirements
-├── requirements.txt        # Python dependencies
-└── README.md              # This file
+│   └── requirements.md         # Project requirements
+├── images/                     # Screenshots
+├── requirements.txt            # Python dependencies
+└── README.md                   # This file
 ```
 
 ## Setup Instructions
@@ -101,10 +111,14 @@ resumatch/
 ### Web Interface
 
 1. Navigate to `http://localhost:5000`
-2. Paste your resume text in the left textarea
+2. **Choose your input method:**
+   - **Option A**: Upload your resume file (PDF, DOCX, or TXT)
+   - **Option B**: Paste your resume text directly
 3. Paste the job description in the right textarea
 4. Click "Analyze Match"
 5. Review your match score and missing keywords
+
+**Note**: When a file is uploaded, the text input is automatically disabled to prevent confusion.
 
 ### API Endpoints
 
@@ -121,15 +135,14 @@ GET /api/health
 }
 ```
 
-#### Analyze Resume
+#### Analyze Resume from File
 ```bash
-POST /api/analyze
-Content-Type: application/json
+POST /api/analyze-file
+Content-Type: multipart/form-data
 
-{
-  "resume": "Your resume text here",
-  "job_description": "Job description text here"
-}
+Form Data:
+- resume_file: PDF, DOCX, or TXT file
+- job_description: Job description text
 ```
 
 **Response:**
@@ -140,7 +153,8 @@ Content-Type: application/json
     "match_score": 42.15,
     "missing_keywords": ["kubernetes", "aws", "docker"],
     "total_missing": 3
-  }
+  },
+  "resume_preview": "First 200 characters of extracted text..."
 }
 ```
 
@@ -169,12 +183,13 @@ python -m pytest tests/
 ## Future Enhancements
 
 - [ ] Add unit tests
-- [ ] Support PDF resume uploads
-- [ ] Generate improvement suggestions
-- [ ] Save analysis history
+- [ ] Generate improvement suggestions with AI
+- [ ] Save analysis history with database
 - [ ] Add user authentication
 - [ ] Deploy to cloud (Heroku/AWS)
 - [ ] Add more sophisticated NLP (BERT embeddings)
+- [ ] Support for more file formats (RTF, ODT)
+- [ ] Batch processing for multiple resumes
 
 ## Contributing
 
