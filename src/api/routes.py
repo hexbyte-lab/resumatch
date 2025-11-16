@@ -58,3 +58,46 @@ def analyze_resume():
         return jsonify(
             {"error": "An error occurred during analysis", "details": str(e)}
         ), 500
+
+@api.route("/analyze-file", methods=["POST"])
+def analyze_file():
+    """
+    Analyze resume file against job description
+    
+    Expected form data:
+    - resume_file: file upload (pdf, docx, txt)
+    - job_description: text input string
+    """
+    from src.utils.file_processor import process_file # Import here to avoid circular imports
+    
+    try:
+        # Check if file is present
+        if 'resume_file' not in request.files:
+            return jsonify({"error": "No file part in the request"}), 400
+        file = request.files['resume_file']
+        
+        if file.filename == '':
+            return jsonify({"error": "No selected file"}), 400
+
+        job_description = request.form.get("job_description", "").strip()
+        
+        if not job_description:
+            return jsonify({"error": "Job description is required"}), 400
+        
+        try:
+            resume_text = process_file(file)
+        except Exception as e:
+            return jsonify({"error": f"Could not extract text from file: {str(e)}"}), 400
+        
+        result = matcher.analyze(resume_text, job_description)
+        
+        return jsonify({
+            "success": True,
+            "data": result,
+            'resume_preview': resume_text[:200] + '...' if len(resume_text) > 200 else resume_text
+        }), 200
+    except Exception as e:
+        logger.error(f"Error in analyze_file: {str(e)}")
+        return jsonify(
+            {"error": "An error occurred during file analysis", "details": str(e)}
+        ), 500
