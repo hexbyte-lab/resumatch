@@ -1,5 +1,5 @@
 from flask import Flask, send_from_directory
-from flask_cors import CORS
+from flask_cors import CORS # type: ignore
 from src.api.routes import api
 from src.config import Config
 
